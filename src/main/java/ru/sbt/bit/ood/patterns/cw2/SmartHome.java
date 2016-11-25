@@ -6,8 +6,9 @@ import ru.sbt.bit.ood.patterns.cw2.objects.Light;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
-public class SmartHome {
+public class SmartHome implements Iterable{
     private final Collection<Light> lights = new ArrayList<>();
     private final Collection<Door> doors = new ArrayList<>();
 
@@ -41,12 +42,29 @@ public class SmartHome {
         for (Light somelight:
              lights) {
             action.execute (somelight);
-            for (Door somedoor:
-                 doors) {
-                action.execute(somedoor);
-            }
-
+        }
+        for (Door somedoor:
+                doors) {
+            action.execute(somedoor);
         }
     }
 
+    @Override
+    public Iterator<Object> iterator() {
+        return new Iterator(){
+            private Iterator lit = lights.iterator();
+            private Iterator dit = doors.iterator();
+
+            @Override
+            public boolean hasNext() {
+                return lit.hasNext() || dit.hasNext();
+            }
+
+            @Override
+            public Object next() {
+                if (lit.hasNext()) return lit.next();
+                else return dit.next();
+            }
+        };
+    }
 }

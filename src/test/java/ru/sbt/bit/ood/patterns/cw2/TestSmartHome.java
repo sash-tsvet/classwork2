@@ -1,6 +1,7 @@
 package ru.sbt.bit.ood.patterns.cw2;
 
 import org.junit.Test;
+import ru.sbt.bit.ood.patterns.cw2.events.LightsOff;
 import ru.sbt.bit.ood.patterns.cw2.events.LightsOn;
 import ru.sbt.bit.ood.patterns.cw2.events.ProxyDoor;
 import ru.sbt.bit.ood.patterns.cw2.objects.DoorType;
@@ -9,6 +10,8 @@ import ru.sbt.bit.ood.patterns.cw2.objects.LightLocation;
 import ru.sbt.bit.ood.patterns.cw2.objects.LightState;
 
 import java.util.Collection;
+import java.util.Iterator;
+
 import static junit.framework.TestCase.assertEquals;
 
 public class TestSmartHome {
@@ -41,6 +44,11 @@ public class TestSmartHome {
         assertLightsAreOff(home.getLights());
         home.forEach(new LightsOn());
         assertLightsAreOn(home.getLights());
+        Iterator hit = home.iterator();
+        while (hit.hasNext()){
+            new LightsOff().execute(hit.next());
+        }
+        assertLightsAreOff(home.getLights());
     }
 
     private SmartHome createSmartHomeWithSingleLight(SimpleLight testLight) {
