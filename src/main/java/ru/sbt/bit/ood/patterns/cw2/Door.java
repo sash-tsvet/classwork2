@@ -5,4 +5,5 @@ public interface Door {
     void close();
     boolean isOpen();
     DoorType getType();
+
 }

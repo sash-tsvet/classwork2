@@ -36,4 +36,26 @@ public class TestSmartHome {
         }
     }
 
+    private void assertLightsAreOn(Collection<Light> lights) {
+        for (Light light : lights) {
+            assertEquals(LightState.ON, light.getState());
+        }
+    }
+
+    @Test
+    public void testTurnOffTheLightsOnDoorClose() {
+        // setup
+        SmartHome home = new SmartHome();
+        DoorCloseEventHandler eventHandler = new DoorCloseEventHandler(home);
+        SimpleLight testLight = createAndTurnOnTheLight();
+        home.addLight(testLight);
+        SimpleDoor door = new SimpleDoor(DoorType.ENTRANCE, eventHandler);
+        // assert
+        assertLightsAreOn(home.getLights());
+        // exercise
+        door.close();
+        // assert
+        assertLightsAreOff(home.getLights());
+    }
+
 }
