@@ -1,5 +1,6 @@
 package ru.sbt.bit.ood.patterns.cw2;
 
+import ru.sbt.bit.ood.patterns.cw2.events.Action;
 import ru.sbt.bit.ood.patterns.cw2.objects.Door;
 import ru.sbt.bit.ood.patterns.cw2.objects.Light;
 
@@ -34,6 +35,18 @@ public class SmartHome {
 
     public Collection<Door> getDoors() {
         return doors;
+    }
+
+    public void forEach (Action action) {
+        for (Light somelight:
+             lights) {
+            action.execute (somelight);
+            for (Door somedoor:
+                 doors) {
+                action.execute(somedoor);
+            }
+
+        }
     }
 
 }

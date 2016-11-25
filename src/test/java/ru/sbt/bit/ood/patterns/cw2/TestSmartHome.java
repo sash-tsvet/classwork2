@@ -1,6 +1,8 @@
 package ru.sbt.bit.ood.patterns.cw2;
 
 import org.junit.Test;
+import ru.sbt.bit.ood.patterns.cw2.events.LightsOn;
+import ru.sbt.bit.ood.patterns.cw2.events.ProxyDoor;
 import ru.sbt.bit.ood.patterns.cw2.objects.DoorType;
 import ru.sbt.bit.ood.patterns.cw2.objects.Light;
 import ru.sbt.bit.ood.patterns.cw2.objects.LightLocation;
@@ -29,12 +31,16 @@ public class TestSmartHome {
         home.addLight(createAndTurnOnTheLight());
         home.addLight(createAndTurnOnTheLight());
         SimpleDoor entranceDoor = new SimpleDoor(DoorType.ENTRANCE);
-        entranceDoor.setListener(new MyHomeEventsListener(home));
-        home.addDoor(entranceDoor);
+        ProxyDoor proxyDoor = new ProxyDoor(entranceDoor);
+        proxyDoor.setEventListener(new MyHomeEventsListener(home));
+        //entranceDoor.setListener(new MyHomeEventsListener(home));
+        home.addDoor(proxyDoor);
         // exercise
-        entranceDoor.close();
+        proxyDoor.close();
         // assert
         assertLightsAreOff(home.getLights());
+        home.forEach(new LightsOn());
+        assertLightsAreOn(home.getLights());
     }
 
     private SmartHome createSmartHomeWithSingleLight(SimpleLight testLight) {
@@ -52,6 +58,12 @@ public class TestSmartHome {
     private void assertLightsAreOff(Collection<Light> lights) {
         for (Light light : lights) {
             assertEquals(LightState.OFF, light.getState());
+        }
+    }
+
+    private void assertLightsAreOn(Collection<Light> lights) {
+        for (Light light : lights) {
+            assertEquals(LightState.ON, light.getState());
         }
     }
 
