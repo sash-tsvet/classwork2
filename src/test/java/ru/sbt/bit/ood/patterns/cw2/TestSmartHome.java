@@ -46,10 +46,14 @@ public class TestSmartHome {
     public void testTurnOffTheLightsOnDoorClose() {
         // setup
         SmartHome home = new SmartHome();
+        CompositeHandler compositeHandler = new CompositeHandler();
         DoorCloseEventHandler eventHandler = new DoorCloseEventHandler(home);
+        DoorOpenEventHandler eventHandler1 = new DoorOpenEventHandler();
+        compositeHandler.addEH(eventHandler);
+        compositeHandler.addEH(eventHandler1);
         SimpleLight testLight = createAndTurnOnTheLight();
         home.addLight(testLight);
-        SimpleDoor door = new SimpleDoor(DoorType.ENTRANCE, eventHandler);
+        SimpleDoor door = new SimpleDoor(DoorType.ENTRANCE, compositeHandler);
         // assert
         assertLightsAreOn(home.getLights());
         // exercise
